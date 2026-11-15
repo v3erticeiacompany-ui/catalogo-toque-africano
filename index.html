@@ -7,17 +7,21 @@
 <meta name="description" content="Catálogo Toque Africano — sofás, camas, racks e design de interiores feitos por medida em Maputo.">
 <meta property="og:title" content="Catálogo · Toque Africano">
 <meta property="og:description" content="Escolha os modelos de que gosta e peça o orçamento pelo WhatsApp. Tudo feito por medida.">
-<meta name="theme-color" content="#2B1D14">
+<meta name="theme-color" content="#036879">
+<link rel="icon" href="icone.png">
+<meta property="og:image" content="logo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Dancing+Script:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <style>
   :root{
-    --terra:#B5532F; --terra-esc:#8C3B1F; --areia:#F1E8DC; --creme:#FBF8F3;
-    --castanho:#2B1D14; --ouro:#C99A4B; --cinza:#7A6A5D; --linha:#E4D8C8;
+    /* Cores do logótipo Toque Africano */
+    --teal:#036879; --laranja:#F8530A; --amarelo:#F9D90D;
+    --terra:#E24A07; --terra-esc:#C2410C; --areia:#E8F2F3; --creme:#F7FAFA;
+    --castanho:#0F3A44; --ouro:#F9D90D; --cinza:#5B7378; --linha:#D3E3E5;
     --zap:#1FA855; --raio:14px;
-    --serif:"Fraunces", Georgia, serif; --sans:"DM Sans", system-ui, sans-serif;
+    --serif:"Montserrat", system-ui, sans-serif; --script:"Dancing Script", cursive; --sans:"DM Sans", system-ui, sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   [hidden]{display:none!important}
@@ -28,19 +32,22 @@
   a{color:inherit}
 
   /* Topo */
-  .topo{background:var(--castanho);color:var(--creme);padding:18px 20px 26px;position:relative;overflow:hidden}
-  .topo::after{content:"";position:absolute;inset:auto -40px -60px auto;width:220px;height:220px;border-radius:50%;
-    background:repeating-radial-gradient(circle,var(--ouro) 0 2px,transparent 2px 14px);opacity:.18}
+  .topo{background:#fff;color:var(--castanho);padding:14px 20px 26px;position:relative;overflow:hidden}
+  .topo::before{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--teal) 0 60%,var(--laranja) 60% 85%,var(--amarelo) 85%)}
+  .topo::after{content:"";position:absolute;inset:auto -50px -70px auto;width:230px;height:230px;border-radius:50%;
+    background:repeating-radial-gradient(circle,var(--teal) 0 2px,transparent 2px 14px);opacity:.09}
+  .logo{height:62px;width:auto}
+  @media(min-width:720px){.logo{height:78px}}
   .topo-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1180px;margin:0 auto}
   .marca{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.2px}
   .marca small{display:block;font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--ouro);margin-top:2px}
-  .btn-visita{border:1px solid rgba(251,248,243,.35);border-radius:999px;padding:9px 14px;font-size:13px;font-weight:500;white-space:nowrap}
+  .btn-visita{border:1.5px solid var(--teal);color:var(--teal);font-weight:700;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:500;white-space:nowrap}
   .so-largo{display:none}@media(min-width:560px){.so-largo{display:inline}}
-  .btn-visita:hover{background:rgba(251,248,243,.08)}
-  .intro{max-width:1180px;margin:22px auto 0;position:relative;z-index:1}
-  .intro h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,6vw,44px);line-height:1.08}
-  .intro h1 em{font-style:italic;color:var(--ouro)}
-  .intro p{margin-top:10px;color:#D9CCBD;font-size:15px;max-width:520px;line-height:1.5}
+  .btn-visita:hover{background:var(--areia)}
+  .intro{max-width:1180px;margin:18px auto 0;position:relative;z-index:1}
+  .intro h1{font-family:var(--serif);font-weight:800;font-size:clamp(26px,6vw,42px);line-height:1.08;color:var(--teal);letter-spacing:-.5px}
+  .intro h1 em{font-family:var(--script);font-style:normal;font-weight:700;color:var(--laranja);font-size:1.25em;letter-spacing:0}
+  .intro p{margin-top:8px;color:var(--cinza);font-size:15px;max-width:520px;line-height:1.5}
 
   /* Navegação de categorias */
   .nav{position:sticky;top:0;z-index:20;background:var(--creme);border-bottom:1px solid var(--linha)}
@@ -48,7 +55,7 @@
   .faixa::-webkit-scrollbar{display:none}
   .chip{flex:none;border:1px solid var(--linha);background:#fff;border-radius:999px;padding:9px 15px;font-size:14px;font-weight:500;color:var(--castanho);transition:.15s}
   .chip:hover{border-color:var(--terra)}
-  .chip[aria-pressed="true"]{background:var(--castanho);border-color:var(--castanho);color:var(--creme)}
+  .chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:var(--creme)}
   .faixa.tipos{padding-top:0}
   .faixa.tipos .chip{font-size:13px;padding:7px 13px;background:transparent}
   .faixa.tipos .chip[aria-pressed="true"]{background:var(--terra);border-color:var(--terra);color:#fff}
@@ -56,13 +63,13 @@
   /* Grelha */
   main{max-width:1180px;margin:0 auto;padding:22px 20px}
   .titulo-sec{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px}
-  .titulo-sec h2{font-family:var(--serif);font-weight:400;font-size:24px}
+  .titulo-sec h2{font-family:var(--serif);font-weight:700;font-size:22px;color:var(--teal)}
   .titulo-sec span{font-size:13px;color:var(--cinza)}
   .grelha{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
   @media(min-width:720px){.grelha{grid-template-columns:repeat(3,1fr);gap:20px}}
   @media(min-width:1040px){.grelha{grid-template-columns:repeat(4,1fr)}}
   .cartao{background:#fff;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);text-align:left;display:flex;flex-direction:column;transition:transform .2s, box-shadow .2s;position:relative}
-  .cartao:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(43,29,20,.35)}
+  .cartao:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(15,58,68,.35)}
   .cartao .foto,.cartao .info{display:block;width:100%}
   .cartao .foto{aspect-ratio:4/5;background:var(--areia);overflow:hidden}
   .cartao .foto img{width:100%;height:100%;object-fit:cover}
@@ -74,24 +81,24 @@
   .coracao svg{width:19px;height:19px;stroke:var(--castanho);fill:none;stroke-width:2}
   .coracao[aria-pressed="true"] svg{fill:var(--terra);stroke:var(--terra)}
   .vazio{grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--cinza)}
-  .vazio strong{display:block;font-family:var(--serif);font-weight:400;font-size:22px;color:var(--castanho);margin-bottom:6px}
-  .esqueleto{aspect-ratio:4/6;border-radius:var(--raio);background:linear-gradient(100deg,var(--areia) 30%,#F8F2EA 50%,var(--areia) 70%);background-size:300% 100%;animation:brilho 1.3s infinite}
+  .vazio strong{display:block;font-family:var(--serif);font-weight:700;font-size:20px;color:var(--teal);margin-bottom:6px}
+  .esqueleto{aspect-ratio:4/6;border-radius:var(--raio);background:linear-gradient(100deg,var(--areia) 30%,#F3F9F9 50%,var(--areia) 70%);background-size:300% 100%;animation:brilho 1.3s infinite}
   @keyframes brilho{to{background-position:-100% 0}}
 
   /* Barra da selecção */
   .barra{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:30;max-width:560px;margin:0 auto;
     background:var(--castanho);color:var(--creme);border-radius:18px;padding:10px 10px 10px 18px;display:flex;align-items:center;gap:12px;
-    box-shadow:0 14px 34px -12px rgba(43,29,20,.6);transform:translateY(140%);transition:transform .3s}
+    box-shadow:0 14px 34px -12px rgba(15,58,68,.6);transform:translateY(140%);transition:transform .3s}
   .barra.mostrar{transform:none}
   .barra .txt{flex:1;font-size:14px;line-height:1.25}
   .barra .txt b{display:block;font-size:15px}
-  .barra .ver{font-size:13px;text-decoration:underline;color:#D9CCBD;padding:6px}
+  .barra .ver{font-size:13px;text-decoration:underline;color:#BFD9DD;padding:6px}
   .btn-zap{background:var(--zap);color:#fff;border-radius:12px;padding:12px 16px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;text-decoration:none;justify-content:center}
   .btn-zap svg{width:18px;height:18px;fill:currentColor}
 
   /* Ficha do modelo */
   dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%;color:var(--castanho)}
-  dialog::backdrop{background:rgba(20,13,9,.62)}
+  dialog::backdrop{background:rgba(6,30,36,.62)}
   .ficha{background:var(--creme);width:100%;height:100%;overflow-y:auto;display:flex;flex-direction:column}
   @media(min-width:860px){
     dialog#ficha{display:grid;place-items:center}
@@ -112,10 +119,11 @@
   .fechar{position:absolute;top:calc(12px + env(safe-area-inset-top));left:12px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:22px;z-index:2}
   .detalhe{padding:22px 20px 28px;display:flex;flex-direction:column;gap:14px}
   .detalhe .cat{font-size:12px;color:var(--cinza);text-transform:uppercase;letter-spacing:1.5px}
-  .detalhe h3{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1}
-  .detalhe .desc{font-size:15px;line-height:1.6;color:#4A3A2E;white-space:pre-line}
+  .detalhe h3{font-family:var(--serif);font-weight:700;font-size:28px;line-height:1.15;color:var(--teal)}
+  .detalhe .desc{font-size:15px;line-height:1.6;color:#2E4A50;white-space:pre-line}
   .selo{display:flex;gap:10px;align-items:center;background:var(--areia);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.4}
-  .selo b{color:var(--terra)}
+  .selo b{color:var(--teal)}
+  .selo>span:first-child{color:var(--laranja);font-size:16px}
   .accoes{display:flex;flex-direction:column;gap:10px;margin-top:4px;position:sticky;bottom:0;background:var(--creme);padding:12px 0 calc(6px + env(safe-area-inset-bottom));box-shadow:0 -12px 16px -10px var(--creme)}
   .btn-sec{border:1.5px solid var(--castanho);border-radius:12px;padding:12px 16px;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px}
   .btn-sec[aria-pressed="true"]{background:var(--areia);border-color:var(--terra);color:var(--terra)}
@@ -123,7 +131,7 @@
   /* Lista da selecção */
   .gaveta{background:var(--creme);position:absolute;left:0;right:0;bottom:0;max-height:86vh;border-radius:22px 22px 0 0;display:flex;flex-direction:column;max-width:600px;margin:0 auto}
   .gaveta header{padding:20px 20px 10px;display:flex;justify-content:space-between;align-items:center}
-  .gaveta h3{font-family:var(--serif);font-weight:400;font-size:24px}
+  .gaveta h3{font-family:var(--serif);font-weight:700;font-size:22px;color:var(--teal)}
   .gaveta .itens{overflow-y:auto;padding:4px 20px}
   .item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--linha)}
   .item img,.item .sem{width:58px;height:58px;border-radius:10px;object-fit:cover;background:var(--areia);flex:none}
@@ -133,7 +141,7 @@
   .gaveta footer{padding:16px 20px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
   .nota{font-size:12px;color:var(--cinza);text-align:center}
   .rodape{text-align:center;color:var(--cinza);font-size:12px;padding:30px 20px 10px}
-  .aviso-toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-250%);background:#fff;color:var(--castanho);box-shadow:0 8px 24px -8px rgba(43,29,20,.45);font-weight:500;padding:10px 16px;border-radius:999px;font-size:13px;z-index:50;transition:transform .3s}
+  .aviso-toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-250%);background:#fff;color:var(--castanho);box-shadow:0 8px 24px -8px rgba(15,58,68,.45);font-weight:500;padding:10px 16px;border-radius:999px;font-size:13px;z-index:50;transition:transform .3s}
   .aviso-toast.mostrar{transform:translate(-50%,0)}
 </style>
 </head>
@@ -141,7 +149,7 @@
 
 <header class="topo">
   <div class="topo-linha">
-    <div class="marca" id="marca">Toque Africano<small>Design de interiores</small></div>
+    <img class="logo" src="logo.webp" alt="Toque Africano — design de interiores" width="640" height="228">
     <a class="btn-visita" id="btnVisita" href="#" target="_blank" rel="noopener">Marcar visita<span class="so-largo"> ao ateliê</span></a>
   </div>
   <div class="intro">
@@ -161,7 +169,7 @@
     <div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div>
   </div>
 </main>
-<p class="rodape">Toque Africano · Maputo · Feito por medida</p>
+<p class="rodape">Toque Africano · Design de interiores · Maputo</p>
 
 <div class="barra" id="barra">
   <div class="txt"><b id="barraN">0 modelos</b><button class="ver" id="verLista">ver a minha selecção</button></div>
@@ -227,7 +235,7 @@
   const toast = (t) => { const e = $("#toast"); e.textContent = t; e.classList.add("mostrar"); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove("mostrar"), 1800); };
 
   const placeholder = (txt) => "data:image/svg+xml," + encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'><rect width='400' height='500' fill='#F1E8DC'/><g fill='none' stroke='#C99A4B' stroke-width='2' opacity='.6'><circle cx='200' cy='230' r='60'/><circle cx='200' cy='230' r='90'/></g><text x='200' y='380' font-family='sans-serif' font-size='18' fill='#7A6A5D' text-anchor='middle'>${txt}</text></svg>`);
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'><rect width='400' height='500' fill='#E8F2F3'/><g fill='none' stroke='#036879' stroke-width='2' opacity='.6'><circle cx='200' cy='230' r='60'/><circle cx='200' cy='230' r='90'/></g><text x='200' y='380' font-family='sans-serif' font-size='18' fill='#5B7378' text-anchor='middle'>${txt}</text></svg>`);
 
   const linkModelo = (m) => location.origin + location.pathname + "#m-" + m.codigo;
   const zap = (msg) => `https://wa.me/${loja.whatsapp}?text=${encodeURIComponent(msg)}`;

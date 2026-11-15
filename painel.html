@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>Painel do catálogo</title>
-<meta name="theme-color" content="#2B1D14">
+<meta name="theme-color" content="#036879">
+<link rel="icon" href="icone.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Dancing+Script:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <style>
-  :root{--terra:#B5532F;--areia:#F1E8DC;--creme:#FBF8F3;--castanho:#2B1D14;--ouro:#C99A4B;--cinza:#7A6A5D;--linha:#E4D8C8;--ok:#1F8A4C;--erro:#B3261E;
-    --serif:"Fraunces",Georgia,serif;--sans:"DM Sans",system-ui,sans-serif}
+  :root{--teal:#036879;--laranja:#F8530A;--amarelo:#F9D90D;--terra:#E24A07;--areia:#E8F2F3;--creme:#F7FAFA;--castanho:#0F3A44;--ouro:#F9D90D;--cinza:#5B7378;--linha:#D3E3E5;--ok:#1F8A4C;--erro:#B3261E;
+    --serif:"Montserrat",system-ui,sans-serif;--sans:"DM Sans",system-ui,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--sans);background:var(--creme);color:var(--castanho);-webkit-font-smoothing:antialiased}
   button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
@@ -23,30 +24,33 @@
   .ajuda{font-size:12px;color:var(--cinza);margin-top:5px;line-height:1.4}
   [hidden]{display:none!important}
 
-  .btn{background:var(--castanho);color:var(--creme);border-radius:12px;padding:13px 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .btn{background:var(--teal);color:var(--creme);border-radius:12px;padding:13px 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
   .btn.terra{background:var(--terra)}
-  .btn.linha{background:transparent;color:var(--castanho);border:1.5px solid var(--castanho)}
+  .btn.linha{background:transparent;color:var(--teal);border:1.5px solid var(--teal)}
   .btn.perigo{background:transparent;color:var(--erro);border:1.5px solid var(--erro)}
   .btn.pequeno{padding:8px 12px;font-size:13px;border-radius:10px}
   .btn:disabled{opacity:.5;cursor:wait}
   .largo{width:100%}
 
   /* Entrada */
-  #entrada{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--castanho)}
+  #entrada{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--teal)}
+  .caixa-entrada .logo{display:block;width:220px;max-width:100%;height:auto;margin:0 auto 18px}
   .caixa-entrada{background:var(--creme);border-radius:22px;padding:30px 24px;width:100%;max-width:380px}
-  .caixa-entrada h1{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1}
-  .caixa-entrada p{color:var(--cinza);font-size:14px;margin-top:8px;line-height:1.5}
+  .caixa-entrada h1{font-family:var(--serif);font-weight:700;font-size:24px;line-height:1.15;color:var(--teal);text-align:center}
+  .caixa-entrada p{color:var(--cinza);font-size:14px;margin-top:8px;line-height:1.5;text-align:center}
   .pin{font-size:26px;letter-spacing:8px;text-align:center}
   .erro{color:var(--erro);font-size:13px;margin-top:10px;min-height:18px}
 
   /* App */
-  .topo{background:var(--castanho);color:var(--creme);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:10}
-  .topo b{font-family:var(--serif);font-weight:600;font-size:18px}
-  .topo small{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ouro)}
-  .topo a,.topo button{font-size:13px;color:#D9CCBD;text-decoration:underline;padding:4px}
-  .abas{display:flex;background:#fff;border-bottom:1px solid var(--linha);position:sticky;top:60px;z-index:9}
+  .topo{background:#fff;color:var(--castanho);border-bottom:3px solid var(--teal);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:10}
+  .topo .marca{display:flex;align-items:center;gap:10px}
+  .topo .logo{height:40px;width:auto}
+  .topo small{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--laranja)}
+  .topo b{display:none}
+  .topo a,.topo button{font-size:13px;color:var(--teal);font-weight:500;text-decoration:underline;padding:4px}
+  .abas{display:flex;background:#fff;border-bottom:1px solid var(--linha);position:sticky;top:63px;z-index:9}
   .abas button{flex:1;padding:14px 6px;font-weight:500;font-size:14px;color:var(--cinza);border-bottom:3px solid transparent}
-  .abas button[aria-selected="true"]{color:var(--castanho);border-color:var(--terra)}
+  .abas button[aria-selected="true"]{color:var(--teal);border-color:var(--laranja);font-weight:700}
   .conteudo{max-width:760px;margin:0 auto;padding:18px 16px 60px}
   .cabeca{display:flex;gap:10px;align-items:center;margin-bottom:14px}
   .cabeca select{flex:1}
@@ -63,10 +67,10 @@
 
   /* Editor */
   dialog{border:0;padding:0;width:100%;max-width:none;height:100%;max-height:none;background:var(--creme);color:var(--castanho)}
-  dialog::backdrop{background:rgba(20,13,9,.6)}
+  dialog::backdrop{background:rgba(6,30,36,.6)}
   @media(min-width:760px){dialog{width:640px;height:auto;max-height:92vh;margin:auto;border-radius:20px}}
   .ed-topo{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--linha);position:sticky;top:0;background:var(--creme);z-index:2}
-  .ed-topo h2{font-family:var(--serif);font-weight:400;font-size:22px}
+  .ed-topo h2{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--teal)}
   .ed-corpo{padding:4px 16px 24px}
   .fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
   .ft{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--areia)}
@@ -92,8 +96,8 @@
   .lk{font-size:12px;color:var(--cinza);text-decoration:underline;padding:4px}
   .del{font-size:12px;color:var(--erro);padding:4px}
   .cartao{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:4px 16px 18px;margin-bottom:14px}
-  .cartao h3{font-family:var(--serif);font-weight:400;font-size:20px;margin-top:14px}
-  .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,300%);background:var(--castanho);color:var(--creme);padding:11px 18px;border-radius:999px;font-size:14px;z-index:100;transition:transform .3s;max-width:90vw;text-align:center}
+  .cartao h3{font-family:var(--serif);font-weight:700;font-size:18px;margin-top:14px;color:var(--teal)}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,300%);background:var(--teal);color:#fff;padding:11px 18px;border-radius:999px;font-size:14px;z-index:100;transition:transform .3s;max-width:90vw;text-align:center}
   .toast.mostrar{transform:translate(-50%,0)}
   .toast.erro{background:var(--erro)}
 </style>
@@ -103,6 +107,7 @@
 <!-- ENTRADA -->
 <section id="entrada">
   <form class="caixa-entrada" id="formEntrada">
+    <img class="logo" src="logo.webp" alt="Toque Africano">
     <h1>Painel do catálogo</h1>
     <p>Introduza o PIN para gerir os modelos e as fotos do catálogo.</p>
     <label for="pin">PIN</label>
@@ -115,7 +120,7 @@
 <!-- APP -->
 <section id="app" hidden>
   <header class="topo">
-    <div><small>Painel do catálogo</small><b id="nomeLoja">—</b></div>
+    <div class="marca"><img class="logo" src="logo.webp" alt="Toque Africano"><small>Painel</small><b id="nomeLoja">—</b></div>
     <div><a href="./" target="_blank">Ver catálogo</a> <button id="sair">Sair</button></div>
   </header>
   <nav class="abas" role="tablist">
