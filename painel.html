@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Painel do catálogo</title>
+<meta name="theme-color" content="#2B1D14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+  :root{--terra:#B5532F;--areia:#F1E8DC;--creme:#FBF8F3;--castanho:#2B1D14;--ouro:#C99A4B;--cinza:#7A6A5D;--linha:#E4D8C8;--ok:#1F8A4C;--erro:#B3261E;
+    --serif:"Fraunces",Georgia,serif;--sans:"DM Sans",system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--creme);color:var(--castanho);-webkit-font-smoothing:antialiased}
+  button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  input,select,textarea{font:inherit;color:inherit;width:100%;border:1.5px solid var(--linha);border-radius:12px;padding:12px 13px;background:#fff;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--terra)}
+  textarea{min-height:110px;resize:vertical;line-height:1.5}
+  label{display:block;font-size:13px;font-weight:700;margin:16px 0 6px}
+  .ajuda{font-size:12px;color:var(--cinza);margin-top:5px;line-height:1.4}
+  [hidden]{display:none!important}
+
+  .btn{background:var(--castanho);color:var(--creme);border-radius:12px;padding:13px 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .btn.terra{background:var(--terra)}
+  .btn.linha{background:transparent;color:var(--castanho);border:1.5px solid var(--castanho)}
+  .btn.perigo{background:transparent;color:var(--erro);border:1.5px solid var(--erro)}
+  .btn.pequeno{padding:8px 12px;font-size:13px;border-radius:10px}
+  .btn:disabled{opacity:.5;cursor:wait}
+  .largo{width:100%}
+
+  /* Entrada */
+  #entrada{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--castanho)}
+  .caixa-entrada{background:var(--creme);border-radius:22px;padding:30px 24px;width:100%;max-width:380px}
+  .caixa-entrada h1{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1}
+  .caixa-entrada p{color:var(--cinza);font-size:14px;margin-top:8px;line-height:1.5}
+  .pin{font-size:26px;letter-spacing:8px;text-align:center}
+  .erro{color:var(--erro);font-size:13px;margin-top:10px;min-height:18px}
+
+  /* App */
+  .topo{background:var(--castanho);color:var(--creme);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:10}
+  .topo b{font-family:var(--serif);font-weight:600;font-size:18px}
+  .topo small{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ouro)}
+  .topo a,.topo button{font-size:13px;color:#D9CCBD;text-decoration:underline;padding:4px}
+  .abas{display:flex;background:#fff;border-bottom:1px solid var(--linha);position:sticky;top:60px;z-index:9}
+  .abas button{flex:1;padding:14px 6px;font-weight:500;font-size:14px;color:var(--cinza);border-bottom:3px solid transparent}
+  .abas button[aria-selected="true"]{color:var(--castanho);border-color:var(--terra)}
+  .conteudo{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+  .cabeca{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+  .cabeca select{flex:1}
+
+  .linha-modelo{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--linha);border-radius:14px;padding:10px;margin-bottom:10px;width:100%;text-align:left}
+  .linha-modelo img,.linha-modelo .sem{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--areia);flex:none}
+  .linha-modelo .t{flex:1;min-width:0}
+  .linha-modelo .t b{display:block;font-weight:500;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .codigo{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--terra)}
+  .meta{font-size:12px;color:var(--cinza);margin-top:2px}
+  .estado{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:#E6F3EC;color:var(--ok)}
+  .estado.oculto{background:#EEE;color:var(--cinza)}
+  .vazio{text-align:center;color:var(--cinza);padding:40px 10px;font-size:14px;line-height:1.5}
+
+  /* Editor */
+  dialog{border:0;padding:0;width:100%;max-width:none;height:100%;max-height:none;background:var(--creme);color:var(--castanho)}
+  dialog::backdrop{background:rgba(20,13,9,.6)}
+  @media(min-width:760px){dialog{width:640px;height:auto;max-height:92vh;margin:auto;border-radius:20px}}
+  .ed-topo{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--linha);position:sticky;top:0;background:var(--creme);z-index:2}
+  .ed-topo h2{font-family:var(--serif);font-weight:400;font-size:22px}
+  .ed-corpo{padding:4px 16px 24px}
+  .fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+  .ft{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--areia)}
+  .ft img{width:100%;height:100%;object-fit:cover}
+  .ft .capa{position:absolute;left:6px;top:6px;background:var(--terra);color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:999px}
+  .ft .acc{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+  .ft .acc button{color:#fff;font-size:12px;font-weight:700;padding:4px 6px}
+  .ft.pendente{opacity:.6}
+  .ft .barra-p{position:absolute;left:8px;right:8px;bottom:8px;height:5px;border-radius:5px;background:rgba(255,255,255,.6);overflow:hidden}
+  .ft .barra-p i{display:block;height:100%;width:0;background:var(--terra);transition:width .3s}
+  .add-foto{aspect-ratio:1;border:2px dashed var(--linha);border-radius:12px;display:grid;place-items:center;text-align:center;font-size:13px;color:var(--cinza);font-weight:500;cursor:pointer;background:#fff}
+  .add-foto span{font-size:28px;display:block;color:var(--terra);line-height:1}
+  .interruptor{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid var(--linha);border-radius:12px;padding:12px 13px;margin-top:16px}
+  .interruptor input{width:22px;height:22px;accent-color:var(--terra)}
+  .ed-fundo{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+
+  .cat-bloco{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .cat-linha{display:flex;align-items:center;gap:8px;padding:6px 0}
+  .cat-linha .n{flex:1;font-weight:500}
+  .cat-linha.tipo{padding-left:16px}
+  .cat-linha.tipo .n{font-weight:400;font-size:14px}
+  .cat-linha .pref{font-size:11px;font-weight:700;color:var(--terra);letter-spacing:1px}
+  .lk{font-size:12px;color:var(--cinza);text-decoration:underline;padding:4px}
+  .del{font-size:12px;color:var(--erro);padding:4px}
+  .cartao{background:#fff;border:1px solid var(--linha);border-radius:14px;padding:4px 16px 18px;margin-bottom:14px}
+  .cartao h3{font-family:var(--serif);font-weight:400;font-size:20px;margin-top:14px}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,300%);background:var(--castanho);color:var(--creme);padding:11px 18px;border-radius:999px;font-size:14px;z-index:100;transition:transform .3s;max-width:90vw;text-align:center}
+  .toast.mostrar{transform:translate(-50%,0)}
+  .toast.erro{background:var(--erro)}
+</style>
+</head>
+<body>
+
+<!-- ENTRADA -->
+<section id="entrada">
+  <form class="caixa-entrada" id="formEntrada">
+    <h1>Painel do catálogo</h1>
+    <p>Introduza o PIN para gerir os modelos e as fotos do catálogo.</p>
+    <label for="pin">PIN</label>
+    <input id="pin" class="pin" type="password" inputmode="numeric" autocomplete="current-password" required>
+    <div class="erro" id="erroEntrada"></div>
+    <button class="btn terra largo" id="btnEntrar" style="margin-top:6px">Entrar</button>
+  </form>
+</section>
+
+<!-- APP -->
+<section id="app" hidden>
+  <header class="topo">
+    <div><small>Painel do catálogo</small><b id="nomeLoja">—</b></div>
+    <div><a href="./" target="_blank">Ver catálogo</a> <button id="sair">Sair</button></div>
+  </header>
+  <nav class="abas" role="tablist">
+    <button role="tab" data-aba="modelos" aria-selected="true">Modelos</button>
+    <button role="tab" data-aba="categorias" aria-selected="false">Categorias</button>
+    <button role="tab" data-aba="definicoes" aria-selected="false">Definições</button>
+  </nav>
+
+  <div class="conteudo" data-painel="modelos">
+    <button class="btn terra largo" id="novoModelo" style="margin-bottom:14px">+ Novo modelo</button>
+    <div class="cabeca"><select id="filtro"></select></div>
+    <div id="listaModelos"></div>
+  </div>
+
+  <div class="conteudo" data-painel="categorias" hidden>
+    <p class="ajuda" style="margin-bottom:14px">"Copiar link" dá o endereço que abre o catálogo já nessa categoria, para enviar ao cliente depois da chamada.</p>
+    <div id="listaCats"></div>
+    <button class="btn linha largo" id="novaCat">+ Nova categoria</button>
+  </div>
+
+  <div class="conteudo" data-painel="definicoes" hidden>
+    <div class="cartao">
+      <h3>Link do catálogo</h3>
+      <label>Endereço para partilhar</label>
+      <input id="linkCatalogo" readonly>
+      <button class="btn linha pequeno" id="copiarLink" style="margin-top:8px">Copiar link</button>
+    </div>
+    <form class="cartao" id="formLoja">
+      <h3>WhatsApp dos pedidos</h3>
+      <label for="whats">Número (com indicativo, ex.: 258 84 123 4567)</label>
+      <input id="whats" inputmode="tel" required>
+      <label for="intro">Início da mensagem quando o cliente envia a selecção</label>
+      <textarea id="intro" style="min-height:80px"></textarea>
+      <button class="btn largo" style="margin-top:14px">Guardar</button>
+    </form>
+    <form class="cartao" id="formPin">
+      <h3>Mudar o PIN</h3>
+      <label for="novoPin">Novo PIN (mínimo 6 caracteres)</label>
+      <input id="novoPin" type="password" inputmode="numeric" minlength="6" required autocomplete="new-password">
+      <label for="novoPin2">Repetir o novo PIN</label>
+      <input id="novoPin2" type="password" inputmode="numeric" minlength="6" required autocomplete="new-password">
+      <button class="btn largo" style="margin-top:14px">Mudar PIN</button>
+    </form>
+  </div>
+</section>
+
+<!-- EDITOR DE MODELO -->
+<dialog id="editor">
+  <form id="formModelo" method="dialog">
+    <div class="ed-topo"><h2 id="edTitulo">Novo modelo</h2><button type="button" data-fechar style="font-size:26px" aria-label="Fechar">×</button></div>
+    <div class="ed-corpo">
+      <div class="codigo" id="edCodigo" style="margin-top:12px"></div>
+      <label for="edCat">Categoria</label>
+      <select id="edCat" required></select>
+      <label for="edNome">Nome do modelo</label>
+      <input id="edNome" required maxlength="80" placeholder="Ex.: Sofá em L Maputo">
+      <label for="edDesc">Descrição</label>
+      <textarea id="edDesc" maxlength="800" placeholder="Ex.: Estrutura em madeira maciça, espuma de alta densidade. Disponível em vários tecidos e cores. Feito por medida."></textarea>
+      <p class="ajuda">Sem preços. O orçamento é feito pelo WhatsApp.</p>
+      <label>Fotos</label>
+      <div class="fotos" id="edFotos"></div>
+      <input type="file" id="edFicheiros" accept="image/*" multiple hidden>
+      <p class="ajuda">A primeira foto é a capa. As fotos são reduzidas automaticamente antes de enviar.</p>
+      <div class="interruptor" id="edAtivoCaixa"><span>Visível no catálogo</span><input type="checkbox" id="edAtivo" checked></div>
+      <div class="ed-fundo">
+        <button type="submit" class="btn terra largo" id="edGuardar">Guardar</button>
+        <button type="button" class="btn perigo largo" id="edApagar" hidden>Apagar modelo</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const C = window.CATALOGO;
+  const FN = `${C.supabaseUrl}/functions/v1/catalogo-admin`;
+  const $ = (s) => document.querySelector(s);
+  const foto = (c) => `${C.supabaseUrl}/storage/v1/object/public/${C.bucket}/${c}`;
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const toast = (t, erro) => { const e = $("#toast"); e.textContent = t; e.classList.toggle("erro", !!erro); e.classList.add("mostrar"); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove("mostrar"), 2600); };
+  const base = location.origin + location.pathname.replace(/painel\.html$/, "");
+
+  let PIN = null, E = { loja: null, categorias: [], modelos: [] }, edicao = null, pendentes = [];
+  try { PIN = sessionStorage.getItem("pin-" + C.loja); } catch {}
+
+  async function chamar(acao, dados = {}) {
+    const r = await fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", apikey: C.chavePublica },
+      body: JSON.stringify({ slug: C.loja, pin: PIN, acao, ...dados }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(j.erro || "Erro de ligação"); e.status = r.status; throw e; }
+    return j;
+  }
+
+  // ---------- Entrada ----------
+  async function entrar(silencioso) {
+    try {
+      E = await chamar("entrar");
+      try { sessionStorage.setItem("pin-" + C.loja, PIN); } catch {}
+      $("#entrada").hidden = true; $("#app").hidden = false;
+      desenharTudo();
+    } catch (e) {
+      PIN = null; try { sessionStorage.removeItem("pin-" + C.loja); } catch {}
+      if (!silencioso) $("#erroEntrada").textContent = e.message;
+    }
+  }
+  $("#formEntrada").onsubmit = async (ev) => {
+    ev.preventDefault(); $("#erroEntrada").textContent = "";
+    PIN = $("#pin").value.trim(); $("#btnEntrar").disabled = true;
+    await entrar(); $("#btnEntrar").disabled = false;
+  };
+  $("#sair").onclick = () => { try { sessionStorage.removeItem("pin-" + C.loja); } catch {} location.reload(); };
+  if (PIN) entrar(true);
+
+  async function recarregar() { E = await chamar("entrar"); desenharTudo(); }
+
+  // ---------- Abas ----------
+  document.querySelectorAll("[data-aba]").forEach((b) => b.onclick = () => {
+    document.querySelectorAll("[data-aba]").forEach((x) => x.setAttribute("aria-selected", x === b));
+    document.querySelectorAll("[data-painel]").forEach((p) => p.hidden = p.dataset.painel !== b.dataset.aba);
+  });
+
+  // ---------- Desenho ----------
+  const raizes = () => E.categorias.filter((c) => !c.pai_id).sort((a, b) => a.ordem - b.ordem);
+  const filhos = (id) => E.categorias.filter((c) => c.pai_id === id).sort((a, b) => a.ordem - b.ordem);
+  const catDe = (id) => E.categorias.find((c) => c.id === id);
+  const fotosDe = (m) => (m.cat_fotos || []).slice().sort((a, b) => a.ordem - b.ordem);
+  const nomeCat = (id) => { const c = catDe(id); if (!c) return ""; const p = c.pai_id ? catDe(c.pai_id) : null; return p ? `${p.nome} › ${c.nome}` : c.nome; };
+
+  function opcoesCat(comTodas) {
+    let h = comTodas ? `<option value="">Todas as categorias (${E.modelos.length})</option>` : `<option value="" disabled selected>Escolha a categoria…</option>`;
+    raizes().forEach((r) => {
+      const fs = filhos(r.id);
+      if (comTodas) {
+        const ids = new Set([r.id, ...fs.map((f) => f.id)]);
+        h += `<option value="r:${r.id}">${esc(r.nome)} (${E.modelos.filter((m) => ids.has(m.categoria_id)).length})</option>`;
+        fs.forEach((f) => h += `<option value="${f.id}">&nbsp;&nbsp;&nbsp;› ${esc(f.nome)} (${E.modelos.filter((m) => m.categoria_id === f.id).length})</option>`);
+      } else {
+        h += `<option value="${r.id}">${esc(r.nome)}${fs.length ? " (geral)" : ""}</option>`;
+        fs.forEach((f) => h += `<option value="${f.id}">&nbsp;&nbsp;&nbsp;› ${esc(f.nome)}</option>`);
+      }
+    });
+    return h;
+  }
+
+  function desenharTudo() {
+    $("#nomeLoja").textContent = E.loja.nome;
+    const f = $("#filtro").value; $("#filtro").innerHTML = opcoesCat(true); $("#filtro").value = f && [...$("#filtro").options].some((o) => o.value === f) ? f : "";
+    desenharModelos(); desenharCats();
+    $("#linkCatalogo").value = base;
+    $("#whats").value = E.loja.whatsapp || ""; $("#intro").value = E.loja.mensagem_intro || "";
+  }
+
+  function desenharModelos() {
+    const f = $("#filtro").value;
+    let lista = E.modelos;
+    if (f.startsWith("r:")) { const id = f.slice(2); const ids = new Set([id, ...filhos(id).map((x) => x.id)]); lista = lista.filter((m) => ids.has(m.categoria_id)); }
+    else if (f) lista = lista.filter((m) => m.categoria_id === f);
+    $("#listaModelos").innerHTML = lista.length ? lista.map((m) => {
+      const fs = fotosDe(m);
+      return `<button class="linha-modelo" data-editar="${m.id}">
+        ${fs[0] ? `<img src="${foto(fs[0].caminho)}" alt="" loading="lazy">` : `<div class="sem"></div>`}
+        <div class="t"><span class="codigo">${esc(m.codigo)}</span><b>${esc(m.nome)}</b><div class="meta">${esc(nomeCat(m.categoria_id))} · ${fs.length} ${fs.length === 1 ? "foto" : "fotos"}</div></div>
+        <span class="estado ${m.ativo ? "" : "oculto"}">${m.ativo ? "Visível" : "Oculto"}</span></button>`;
+    }).join("") : `<div class="vazio">Ainda não há modelos aqui.<br>Carregue em <b>+ Novo modelo</b> para começar.</div>`;
+  }
+  $("#filtro").onchange = desenharModelos;
+
+  function desenharCats() {
+    $("#listaCats").innerHTML = raizes().map((r) => `<div class="cat-bloco">
+      <div class="cat-linha"><span class="n">${esc(r.nome)}</span><span class="pref">${esc(r.prefixo || "")}</span>
+        <button class="lk" data-copiar="${r.slug}">Copiar link</button><button class="del" data-apagarcat="${r.id}">Apagar</button></div>
+      ${filhos(r.id).map((t) => `<div class="cat-linha tipo"><span class="n">› ${esc(t.nome)}</span>
+        <button class="lk" data-copiar="${t.slug}">Copiar link</button><button class="del" data-apagarcat="${t.id}">Apagar</button></div>`).join("")}
+      <button class="lk" data-novotipo="${r.id}" style="margin-left:12px">+ Novo tipo de ${esc(r.nome.toLowerCase())}</button>
+    </div>`).join("");
+  }
+
+  async function copiar(txt) {
+    try { await navigator.clipboard.writeText(txt); toast("Link copiado"); }
+    catch { prompt("Copie o link:", txt); }
+  }
+  $("#copiarLink").onclick = () => copiar(base);
+
+  document.addEventListener("click", async (e) => {
+    const t = e.target.closest("[data-editar],[data-copiar],[data-apagarcat],[data-novotipo],[data-fechar],[data-capa],[data-apagarfoto],[data-tirarpend],[data-addfoto]");
+    if (!t) return;
+    if (t.dataset.editar) abrirEditor(E.modelos.find((m) => m.id === t.dataset.editar));
+    else if (t.dataset.copiar) copiar(base + "#" + t.dataset.copiar);
+    else if (t.dataset.novotipo) {
+      const nome = prompt("Nome do novo tipo (ex.: Sofás reclináveis):"); if (!nome) return;
+      try { await chamar("criar_categoria", { nome, pai_id: t.dataset.novotipo }); await recarregar(); toast("Tipo criado"); } catch (er) { toast(er.message, true); }
+    }
+    else if (t.dataset.apagarcat) {
+      const c = catDe(t.dataset.apagarcat); if (!confirm(`Apagar "${c.nome}"?`)) return;
+      try { await chamar("apagar_categoria", { id: c.id }); await recarregar(); toast("Apagada"); } catch (er) { toast(er.message, true); }
+    }
+    else if (t.dataset.fechar !== undefined) fecharEditor();
+    else if (t.dataset.addfoto !== undefined) $("#edFicheiros").click();
+    else if (t.dataset.capa) {
+      try { await chamar("capa_foto", { id: t.dataset.capa }); await recarregar(); abrirEditor(E.modelos.find((m) => m.id === edicao.id), true); toast("Capa alterada"); } catch (er) { toast(er.message, true); }
+    }
+    else if (t.dataset.apagarfoto) {
+      if (!confirm("Apagar esta foto?")) return;
+      try { await chamar("apagar_foto", { id: t.dataset.apagarfoto }); await recarregar(); abrirEditor(E.modelos.find((m) => m.id === edicao.id), true); toast("Foto apagada"); } catch (er) { toast(er.message, true); }
+    }
+    else if (t.dataset.tirarpend) { pendentes.splice(+t.dataset.tirarpend, 1); desenharFotosEditor(); }
+  });
+
+  $("#novaCat").onclick = async () => {
+    const nome = prompt("Nome da nova categoria (ex.: Cozinhas):"); if (!nome) return;
+    const prefixo = prompt("Prefixo do código, 3 letras (ex.: COZ). Deixe vazio para gerar automaticamente:", "") || "";
+    try { await chamar("criar_categoria", { nome, prefixo }); await recarregar(); toast("Categoria criada"); } catch (er) { toast(er.message, true); }
+  };
+
+  // ---------- Editor ----------
+  function abrirEditor(m, manterPendentes) {
+    edicao = m || null;
+    if (!manterPendentes) { pendentes.forEach((p) => URL.revokeObjectURL(p.url)); pendentes = []; }
+    $("#edTitulo").textContent = m ? "Editar modelo" : "Novo modelo";
+    $("#edCodigo").textContent = m ? m.codigo : "O código é criado automaticamente ao guardar";
+    $("#edCat").innerHTML = opcoesCat(false);
+    if (m) $("#edCat").value = m.categoria_id;
+    else { const f = $("#filtro").value; if (f && !f.startsWith("r:")) $("#edCat").value = f; else if (f) $("#edCat").value = f.slice(2); }
+    $("#edNome").value = m?.nome || ""; $("#edDesc").value = m?.descricao || "";
+    $("#edAtivo").checked = m ? m.ativo : true; $("#edAtivoCaixa").hidden = !m;
+    $("#edApagar").hidden = !m;
+    desenharFotosEditor();
+    if (!$("#editor").open) $("#editor").showModal();
+  }
+  function fecharEditor() {
+    if (pendentes.length && !confirm("Há fotos por enviar. Fechar sem guardar?")) return;
+    pendentes.forEach((p) => URL.revokeObjectURL(p.url)); pendentes = [];
+    $("#editor").close();
+  }
+  $("#novoModelo").onclick = () => abrirEditor(null);
+
+  function desenharFotosEditor() {
+    const ex = edicao ? fotosDe(edicao) : [];
+    $("#edFotos").innerHTML =
+      ex.map((f, i) => `<div class="ft"><img src="${foto(f.caminho)}" alt="">${i === 0 ? `<span class="capa">Capa</span>` : ""}
+        <div class="acc">${i ? `<button type="button" data-capa="${f.id}">★ Capa</button>` : "<span></span>"}<button type="button" data-apagarfoto="${f.id}">Apagar</button></div></div>`).join("") +
+      pendentes.map((p, i) => `<div class="ft pendente" id="pend-${i}"><img src="${p.url}" alt="">${!ex.length && i === 0 ? `<span class="capa">Capa</span>` : ""}
+        <div class="barra-p"><i></i></div><div class="acc" style="bottom:12px"><span></span><button type="button" data-tirarpend="${i}">Tirar</button></div></div>`).join("") +
+      `<button type="button" class="add-foto" data-addfoto><div><span>+</span>Adicionar fotos</div></button>`;
+  }
+  $("#edFicheiros").onchange = (e) => {
+    [...e.target.files].forEach((f) => { if (f.type.startsWith("image/")) pendentes.push({ file: f, url: URL.createObjectURL(f) }); });
+    e.target.value = ""; desenharFotosEditor();
+  };
+
+  async function comprimir(file, max = 1600, q = 0.82) {
+    let img;
+    try { img = await createImageBitmap(file, { imageOrientation: "from-image" }); }
+    catch {
+      img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = URL.createObjectURL(file); });
+    }
+    const w = img.width, h = img.height, k = Math.min(1, max / Math.max(w, h));
+    const cv = document.createElement("canvas"); cv.width = Math.round(w * k); cv.height = Math.round(h * k);
+    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+    return await new Promise((ok) => cv.toBlob(ok, "image/jpeg", q));
+  }
+
+  async function enviarFoto(modeloId, p, i) {
+    const barra = document.querySelector(`#pend-${i} .barra-p i`);
+    const set = (v) => barra && (barra.style.width = v + "%");
+    set(15);
+    const blob = await comprimir(p.file); set(40);
+    const u = await chamar("url_upload", { modelo_id: modeloId, extensao: "jpg" }); set(55);
+    const r = await fetch(`${C.supabaseUrl}/storage/v1/object/upload/sign/${C.bucket}/${u.caminho}?token=${encodeURIComponent(u.token)}`,
+      { method: "PUT", headers: { "Content-Type": "image/jpeg", "x-upsert": "false" }, body: blob });
+    if (!r.ok) throw new Error("Falha ao enviar a foto");
+    set(85);
+    await chamar("registar_foto", { modelo_id: modeloId, caminho: u.caminho }); set(100);
+  }
+
+  $("#formModelo").onsubmit = async (ev) => {
+    ev.preventDefault();
+    if (!$("#edCat").value) { toast("Escolha a categoria", true); return; }
+    const btn = $("#edGuardar"); btn.disabled = true;
+    try {
+      let id;
+      const dados = { nome: $("#edNome").value.trim(), descricao: $("#edDesc").value.trim(), categoria_id: $("#edCat").value };
+      if (edicao) { id = edicao.id; await chamar("editar_modelo", { id, ...dados, ativo: $("#edAtivo").checked }); }
+      else { const r = await chamar("criar_modelo", dados); id = r.modelo.id; edicao = r.modelo; $("#edCodigo").textContent = r.modelo.codigo; }
+      let falhas = 0;
+      for (let i = 0; i < pendentes.length; i++) {
+        btn.textContent = `A enviar foto ${i + 1} de ${pendentes.length}…`;
+        try { await enviarFoto(id, pendentes[i], i); } catch (er) { console.error(er); falhas++; }
+      }
+      pendentes.forEach((p) => URL.revokeObjectURL(p.url)); pendentes = [];
+      await recarregar();
+      $("#editor").close();
+      toast(falhas ? `Guardado, mas ${falhas} foto(s) falharam. Tente de novo.` : `Guardado · ${edicao.codigo || ""}`, !!falhas);
+    } catch (er) { toast(er.message, true); }
+    finally { btn.disabled = false; btn.textContent = "Guardar"; }
+  };
+
+  $("#edApagar").onclick = async () => {
+    if (!edicao || !confirm(`Apagar o modelo ${edicao.codigo} e todas as fotos? Não dá para desfazer.`)) return;
+    try { await chamar("apagar_modelo", { id: edicao.id }); pendentes = []; $("#editor").close(); await recarregar(); toast("Modelo apagado"); } catch (er) { toast(er.message, true); }
+  };
+  $("#editor").addEventListener("cancel", (e) => { e.preventDefault(); fecharEditor(); });
+
+  // ---------- Definições ----------
+  $("#formLoja").onsubmit = async (ev) => {
+    ev.preventDefault();
+    try { const r = await chamar("definir_loja", { whatsapp: $("#whats").value, mensagem_intro: $("#intro").value }); E.loja = r.loja; desenharTudo(); toast("Guardado"); } catch (er) { toast(er.message, true); }
+  };
+  $("#formPin").onsubmit = async (ev) => {
+    ev.preventDefault();
+    const a = $("#novoPin").value, b = $("#novoPin2").value;
+    if (a !== b) { toast("Os PIN não coincidem", true); return; }
+    try { await chamar("alterar_pin", { novo_pin: a }); PIN = a; try { sessionStorage.setItem("pin-" + C.loja, a); } catch {} ev.target.reset(); toast("PIN alterado"); } catch (er) { toast(er.message, true); }
+  };
+})();
+</script>
+</body>
+</html>
